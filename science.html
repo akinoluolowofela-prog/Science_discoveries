@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crazy Discoveries 🔬</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, #18245c 0%, #070b20 45%, #02030a 100%);
+    color: white;
+    min-height: 100vh;
+}
+
+/* HEADER */
+
+header {
+    text-align: center;
+    padding: 55px 20px 30px;
+}
+
+header h1 {
+    font-size: 52px;
+    background: linear-gradient(90deg, #00eaff, #9d5cff, #ff4ecd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    margin-top: 12px;
+    color: #b9c3e8;
+    font-size: 18px;
+}
+
+/* SEARCH */
+
+.search {
+    display: flex;
+    justify-content: center;
+    margin: 25px;
+}
+
+#searchBox {
+    width: min(650px, 90%);
+    padding: 16px 20px;
+    border: 1px solid #394477;
+    border-radius: 30px;
+    background: #101633;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+/* CATEGORIES */
+
+.categories {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.categories button {
+    background: #121a3c;
+    color: white;
+    border: 1px solid #384477;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.categories button:hover {
+    background: #29346b;
+    transform: translateY(-2px);
+}
+
+/* STATS */
+
+.stats {
+    text-align: center;
+    margin: 30px;
+    color: #8d98c9;
+}
+
+.stats span {
+    color: #72eaff;
+    font-weight: bold;
+}
+
+/* GRID */
+
+.grid {
+    width: min(1250px, 92%);
+    margin: 35px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 22px;
+}
+
+/* CARD */
+
+.card {
+    background: rgba(15, 22, 50, 0.95);
+    border: 1px solid #293565;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.3s;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: #6b70ff;
+    box-shadow: 0 15px 45px rgba(76,82,255,0.25);
+}
+
+.discovery-image {
+    width: 100%;
+    height: 185px;
+    object-fit: cover;
+    display: block;
+}
+
+.card-content {
+    padding: 23px;
+}
+
+.category {
+    color: #72eaff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.card h2 {
+    margin: 10px 0;
+    font-size: 23px;
+}
+
+.card p {
+    color: #b8c0dd;
+    line-height: 1.6;
+    margin: 10px 0 20px;
+}
+
+.explore {
+    border: none;
+    background: linear-gradient(90deg, #4655ff, #a342ff);
+    color: white;
+    padding: 11px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.explore:hover {
+    opacity: 0.85;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal-content {
+    background: #0d1430;
+    border: 1px solid #4654a0;
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    padding: 35px;
+    position: relative;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.7);
+}
+
+.modal-content h2 {
+    font-size: 32px;
+    margin-bottom: 18px;
+}
+
+.modal-content p {
+    color: #c5cbe5;
+    line-height: 1.8;
+    font-size: 17px;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 12px;
+    font-size: 32px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: white;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 50px 20px;
+    color: #68719a;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 38px;
+    }
+
+    .grid {
+        width: 94%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔬 Crazy Discoveries</h1>
+    <p>Science is stranger than fiction.</p>
+</header>
+
+<div class="search">
+    <input
+        id="searchBox"
+        type="text"
+        placeholder="🔎 Search discoveries..."
+        oninput="searchDiscoveries()"
+    >
+</div>
+
+<div class="categories">
+    <button onclick="filterCategory('all')">🌎 All</button>
+    <button onclick="filterCategory('space')">🌌 Space</button>
+    <button onclick="filterCategory('physics')">⚛️ Physics</button>
+    <button onclick="filterCategory('biology')">🧬 Biology</button>
+    <button onclick="filterCategory('mind')">🧠 Mind</button>
+    <button onclick="filterCategory('earth')">🗺️ Earth</button>
+    <button onclick="filterCategory('medicine')">🩺 Medicine</button>
+</div>
+
+<div class="stats">
+    Exploring <span id="count">24</span> incredible discoveries
+</div>
+
+<main class="grid">
+
+<!-- 1 -->
+
+<div class="card" data-category="space" data-name="black holes">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=80"
+alt="Space">
+
+<div class="card-content">
+<div class="category">Space</div>
+<h2> Black Holes</h2>
+<p>Gravity becomes so powerful that even light cannot escape.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Black Holes',
+'Black holes are regions of spacetime with extremely strong gravity. Their event horizon marks the boundary beyond which light cannot escape.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 2 -->
+
+<div class="card" data-category="physics" data-name="quantum entanglement">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=80"
+alt="Physics">
+
+<div class="card-content">
+<div class="category">Physics</div>
+<h2> Quantum Entanglement</h2>
+<p>Particles can share bizarre quantum correlations across distance.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Quantum Entanglement',
+'Entangled quantum systems share a joint state and can produce correlations that cannot be explained using classical physics.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 3 -->
+
+<div class="card" data-category="biology" data-name="tardigrades water bears">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=900&q=80"
+alt="Microscopic life">
+
+<div class="card-content">
+<div class="category">Biology</div>
+<h2> Tardigrades</h2>
+<p>Tiny animals capable of surviving remarkably harsh conditions.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Tardigrades',
+'Tardigrades can enter a dried-out state called cryptobiosis. Their metabolism becomes extremely low, allowing them to survive conditions that are lethal to many other organisms.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 4 -->
+
+<div class="card" data-category="mind" data-name="neuroplasticity brain">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=900&q=80"
+alt="Brain">
+
+<div class="card-content">
+<div class="category">Mind</div>
+<h2> Neuroplasticity</h2>
+<p>Your brain can reorganize itself through experience and learning.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Neuroplasticity',
+'Neuroplasticity is the ability of the nervous system to change its structure and function in response to experience, learning, development or injury.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 5 -->
+
+<div class="card" data-category="space" data-name="rogue planets">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?auto=format&fit=crop&w=900&q=80"
+alt="Planet">
+
+<div class="card-content">
+<div class="category">Space</div>
+<h2> Rogue Planets</h2>
+<p>Planets can wander through space without orbiting a star.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Rogue Planets',
+'Rogue planets are planetary-mass objects that are not gravitationally bound to a particular star. Some may have been ejected from planetary systems.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 6 -->
+
+<div class="card" data-category="biology" data-name="octopus intelligence">
+<img class="discovery-image"
+src="https://bwcsa.co.za/wp-content/uploads/2017/06/Octopus.jpg"
+alt="Octopus">
+
+<div class="card-content">
+<div class="category">Biology</div>
+<h2> Octopus Intelligence</h2>
+<p>Octopuses can learn, explore and solve problems.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Octopus Intelligence',
+'Octopuses have complex nervous systems and display learning, exploration, problem solving and object manipulation.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 7 -->
+
+<div class="card" data-category="space" data-name="neutron stars">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=900&q=80"
+alt="Stars">
+
+<div class="card-content">
+<div class="category">Space</div>
+<h2> Neutron Stars</h2>
+<p>A star's mass can be compressed into an incredibly tiny object.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Neutron Stars',
+'Neutron stars are the extremely dense remnants of massive stars after certain supernova explosions. A neutron star can contain more mass than the Sun within a city-sized object.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 8 -->
+
+<div class="card" data-category="physics" data-name="time dilation">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=900&q=80"
+alt="Space time">
+
+<div class="card-content">
+<div class="category">Physics</div>
+<h2> Time Dilation</h2>
+<p>Time does not pass at exactly the same rate everywhere.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Time Dilation',
+'Einstein’s theories of relativity show that the passage of time depends on relative motion and gravitational conditions. These effects have been measured experimentally.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 9 -->
+
+<div class="card" data-category="earth" data-name="deep ocean">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80"
+alt="Ocean">
+
+<div class="card-content">
+<div class="category">Earth</div>
+<h2> Deep Ocean</h2>
+<p>Life exists in places with crushing pressure and almost no sunlight.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Deep Ocean',
+'The deep ocean contains ecosystems adapted to darkness, cold and enormous pressure. Hydrothermal vents can support communities using chemical energy rather than sunlight.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 10 -->
+
+<div class="card" data-category="biology" data-name="bioluminescence">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80"
+alt="Bioluminescence">
+
+<div class="card-content">
+<div class="category">Biology</div>
+<h2> Bioluminescence</h2>
+<p>Living organisms can create their own light.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Bioluminescence',
+'Bioluminescence is the production of light by living organisms through chemical reactions. It occurs in many marine animals, fungi and microorganisms.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 11 -->
+
+<div class="card" data-category="medicine" data-name="immune system">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=900&q=80"
+alt="Science laboratory">
+
+<div class="card-content">
+<div class="category">Medicine</div>
+<h2> Immune System</h2>
+<p>Your body has a complex defense network that can remember threats.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Immune System',
+'The immune system uses many types of cells and molecules to detect and respond to threats. Some immune responses can create lasting memory.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 12 -->
+
+<div class="card" data-category="physics" data-name="antimatter">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=900&q=80"
+alt="Particle physics">
+
+<div class="card-content">
+<div class="category">Physics</div>
+<h2> Antimatter</h2>
+<p>For many particles, nature provides an opposite counterpart.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Antimatter',
+'Antimatter consists of particles with properties related to ordinary matter but with opposite electric charge for charged particles. Matter and antimatter can annihilate when they meet, converting their mass into energy and other particles.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 13 -->
+
+<div class="card" data-category="earth" data-name="earth magnetic field">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1446776877081-d282a0f896e2?auto=format&fit=crop&w=900&q=80"
+alt="Earth from space">
+
+<div class="card-content">
+<div class="category">Earth</div>
+<h2> Earth's Magnetic Field</h2>
+<p>An invisible magnetic shield surrounds our planet.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Earth Magnetic Field',
+'Earth’s magnetic field is generated mainly by motion in its outer core. It helps deflect charged particles from the solar wind and contributes to the auroras.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 14 -->
+
+<div class="card" data-category="biology" data-name="dna">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?auto=format&fit=crop&w=900&q=80"
+alt="DNA">
+
+<div class="card-content">
+<div class="category">Biology</div>
+<h2> DNA</h2>
+<p>A microscopic molecule stores the instructions used by living organisms.</p>
+
+<button class="explore" onclick="openDiscovery(
+' DNA',
+'DNA carries genetic information in living organisms. Its sequence helps provide instructions for building and maintaining an organism.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 15 -->
+
+<div class="card" data-category="space" data-name="dark matter">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=80"
+alt="Galaxy">
+
+<div class="card-content">
+<div class="category">Space</div>
+<h2> Dark Matter</h2>
+<p>Something invisible appears to provide additional gravity in galaxies.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Dark Matter',
+'Astronomers observe gravitational effects that cannot be explained by the visible matter alone. Dark matter is the name given to the unknown substance proposed to account for much of this additional gravitational effect.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 16 -->
+
+<div class="card" data-category="physics" data-name="quantum tunneling">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=80"
+alt="Quantum physics">
+
+<div class="card-content">
+<div class="category">Physics</div>
+<h2> Quantum Tunneling</h2>
+<p>Particles can sometimes cross barriers they couldn't cross classically.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Quantum Tunneling',
+'Quantum mechanics allows particles to have a probability of appearing across an energy barrier. This effect is important in phenomena including radioactive decay and some electronic devices.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 17 -->
+
+<div class="card" data-category="mind" data-name="memory">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=900&q=80"
+alt="Brain">
+
+<div class="card-content">
+<div class="category">Mind</div>
+<h2> Human Memory</h2>
+<p>Memory isn't a perfect recording of the past.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Human Memory',
+'Human memory is reconstructive. Remembering involves networks of brain activity, and memories can change or become less accurate over time.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 18 -->
+
+<div class="card" data-category="earth" data-name="volcano lightning">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80"
+alt="Volcano">
+
+<div class="card-content">
+<div class="category">Earth</div>
+<h2> Volcanic Lightning</h2>
+<p>Some volcanic eruptions can produce spectacular lightning.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Volcanic Lightning',
+'Powerful volcanic eruptions can generate electrical charges in ash clouds. When the charges separate sufficiently, lightning can occur within the eruption plume.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 19 -->
+
+<div class="card" data-category="medicine" data-name="microscopic surgery">
+<img class="discovery-image"
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxJ04ervGi5gBVUNgeWYNxQ89BaQk63ewa8wFnbGY8o8J_ULUOjA15ues&s=10"
+alt="Medical science">
+
+<div class="card-content">
+<div class="category">Medicine</div>
+<h2> Microscopic Surgery</h2>
+<p>Surgeons can perform extremely precise operations using magnification.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Microscopic Surgery',
+'Microsurgery uses specialized instruments and magnification to perform extremely precise procedures on tiny structures such as blood vessels and nerves.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 20 -->
+
+<div class="card" data-category="biology" data-name="regeneration">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=900&q=80"
+alt="Biology">
+
+<div class="card-content">
+<div class="category">Biology</div>
+<h2> Regeneration</h2>
+<p>Some animals can regrow body parts.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Regeneration',
+'Some animals can regenerate damaged or lost tissues. Different species have very different regenerative abilities, and researchers study these mechanisms to better understand tissue repair.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 21 -->
+
+<div class="card" data-category="space" data-name="gravitational waves">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=900&q=80"
+alt="Universe">
+
+<div class="card-content">
+<div class="category">Space</div>
+<h2>〰️ Gravitational Waves</h2>
+<p>Collisions between massive objects can ripple through spacetime.</p>
+
+<button class="explore" onclick="openDiscovery(
+'〰️ Gravitational Waves',
+'Gravitational waves are ripples in spacetime produced by accelerating massive objects. The first direct detection came from merging black holes.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 22 -->
+
+<div class="card" data-category="biology" data-name="extremophiles">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=900&q=80"
+alt="Microorganisms">
+
+<div class="card-content">
+<div class="category">Biology</div>
+<h2> Extremophiles</h2>
+<p>Some organisms thrive in environments that seem impossible for life.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Extremophiles',
+'Extremophiles are organisms adapted to environments such as extreme heat, acidity, salinity or pressure. They demonstrate how adaptable life can be.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 23 -->
+
+<div class="card" data-category="physics" data-name="superconductors">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=80"
+alt="Physics">
+
+<div class="card-content">
+<div class="category">Physics</div>
+<h2> Superconductors</h2>
+<p>Some materials can conduct electricity with essentially no electrical resistance under suitable conditions.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Superconductors',
+'Below a critical temperature, certain materials can enter a superconducting state with zero electrical resistance. Superconductivity also produces striking magnetic effects.'
+)">Explore →</button>
+</div>
+</div>
+
+
+<!-- 24 -->
+
+<div class="card" data-category="earth" data-name="aurora">
+<img class="discovery-image"
+src="https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=900&q=80"
+alt="Aurora">
+
+<div class="card-content">
+<div class="category">Earth</div>
+<h2> Auroras</h2>
+<p>Particles from space can create glowing lights in Earth's atmosphere.</p>
+
+<button class="explore" onclick="openDiscovery(
+' Auroras',
+'Auroras occur when energetic charged particles interact with gases in Earth’s upper atmosphere. The resulting emissions can create spectacular colors in the sky.'
+)">Explore →</button>
+</div>
+</div>
+
+</main>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closeModal()">×</span>
+
+        <h2 id="modalTitle"></h2>
+
+        <p id="modalText"></p>
+
+    </div>
+
+</div>
+
+<footer>
+    🔬 Crazy Discoveries — Science is stranger than fiction.
+</footer>
+
+<script>
+
+/* OPEN DISCOVERY */
+
+function openDiscovery(title, text) {
+
+    document.getElementById("modalTitle").textContent = title;
+
+    document.getElementById("modalText").textContent = text;
+
+    document.getElementById("modal").style.display = "flex";
+}
+
+
+/* CLOSE DISCOVERY */
+
+function closeModal() {
+
+    document.getElementById("modal").style.display = "none";
+}
+
+
+/* CLICK OUTSIDE */
+
+document.getElementById("modal").addEventListener("click", function(event) {
+
+    if (event.target === this) {
+
+        closeModal();
+
+    }
+
+});
+
+
+/* ESCAPE KEY */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        closeModal();
+
+    }
+
+});
+
+
+/* CATEGORY FILTER */
+
+function filterCategory(category) {
+
+    const cards = document.querySelectorAll(".card");
+
+    let visible = 0;
+
+    cards.forEach(function(card) {
+
+        if (
+            category === "all" ||
+            card.dataset.category === category
+        ) {
+
+            card.style.display = "";
+
+            visible++;
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    document.getElementById("count").textContent = visible;
+}
+
+
+/* SEARCH */
+
+function searchDiscoveries() {
+
+    const search =
+        document
+        .getElementById("searchBox")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const cards = document.querySelectorAll(".card");
+
+    let visible = 0;
+
+    cards.forEach(function(card) {
+
+        const name = card.dataset.name.toLowerCase();
+
+        const text = card.innerText.toLowerCase();
+
+        if (
+            name.includes(search) ||
+            text.includes(search)
+        ) {
+
+            card.style.display = "";
+
+            visible++;
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    document.getElementById("count").textContent = visible;
+}
+
+</script>
+
+</body>
+</html>
